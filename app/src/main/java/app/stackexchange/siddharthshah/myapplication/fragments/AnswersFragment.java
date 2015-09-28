@@ -160,21 +160,25 @@ public class AnswersFragment extends Fragment implements LoaderManager.LoaderCal
                 for (int i = 0; i < size; i++) {
                     if (answerList.get(i).answerId != null) {
                         ContentValues contentValues = new ContentValues();
-                        Answer question = answerList.get(i);
+                        Answer answer = answerList.get(i);
                         contentValues.put(QuestionAnswerContract.AnswerEntry.COL_QUESTION_ID,
-                                question.questionId);
+                                answer.questionId);
                         contentValues.put(QuestionAnswerContract.AnswerEntry.COL_ANSWER_ID,
-                                question.answerId);
+                                answer.answerId);
                         contentValues.put(QuestionAnswerContract.AnswerEntry.COL_ANSWER_OWNER,
-                                question.owner.displayName);
+                                answer.owner.displayName);
+
                         contentValues.put(QuestionAnswerContract.AnswerEntry.COL_ANSWER_BODY,
-                                question.body);
+                                answer.body);
                         contentValues.put(QuestionAnswerContract.AnswerEntry.COL_TOTAL_VOTES,
                                 0);
                         Uri uri = Uri.withAppendedPath(QuestionAnswerContract.BASE_CONTENT_URI,
                                 QuestionAnswerContract.PATH_ANSWERS);
                         getActivity().getContentResolver().insert(uri, contentValues);
                     }
+                }
+                if (progressDialog.isShowing()) {
+                    progressDialog.dismiss();
                 }
                 getLoaderManager().initLoader(LOAD_ANSWERS, null, AnswersFragment.this);
 
