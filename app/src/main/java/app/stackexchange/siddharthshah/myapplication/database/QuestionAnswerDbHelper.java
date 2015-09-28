@@ -26,7 +26,7 @@ public class QuestionAnswerDbHelper extends SQLiteOpenHelper {
                 QuestionAnswerContract.QuestionEntry.COL_QUESTION_BODY + " TEXT, " +
                 QuestionAnswerContract.QuestionEntry.COL_TOTAL_VOTES + " INTEGER, " +
                 QuestionAnswerContract.QuestionEntry.COL_QUESTION_TAG + " TEXT " +
-                " ON CONFLICT REPLACE );";
+                "  );";
 
         final String SQL_CREATE_ANSWER_TABLE = "CREATE TABLE " + QuestionAnswerContract.AnswerEntry.TABLE_NAME + " (" +
                 QuestionAnswerContract.AnswerEntry.COL_ANSWER_ID + " INTEGER PRIMARY KEY," +
