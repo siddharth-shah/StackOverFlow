@@ -26,16 +26,19 @@ import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
 
-import app.stackexchange.siddharthshah.myapplication.http.GsonRequest;
 import app.stackexchange.siddharthshah.myapplication.R;
 import app.stackexchange.siddharthshah.myapplication.StackexchangeApplication;
 import app.stackexchange.siddharthshah.myapplication.adapters.QuestionsAdapter;
 import app.stackexchange.siddharthshah.myapplication.database.QuestionAnswerContract;
 import app.stackexchange.siddharthshah.myapplication.http.Constants;
+import app.stackexchange.siddharthshah.myapplication.http.GsonRequest;
 import app.stackexchange.siddharthshah.myapplication.model.Question;
 import app.stackexchange.siddharthshah.myapplication.model.QuestionList;
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class QuestionListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
+public class QuestionListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String[] QUESTION_COLUMNS = {
             QuestionAnswerContract.QuestionEntry.COL_QUESTION_ID,
@@ -51,16 +54,18 @@ public class QuestionListFragment extends Fragment implements LoaderManager.Load
     String siteToSearch = "stackoverflow";
     String filter = "!ORaDYJ3okQ(x.OUNeuBwjRqmvMFB4CCvAx8TwqtWoBW";
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-    private RecyclerView mRecyclerView;
     private QuestionsAdapter mQuestionsAdapter;
     private CursorLoader mCursorLoader;
     private Integer questionId;
     private int page = 1;
     private int pageSize = 20;
-    private EditText mSearchInput;
-    private Button mSearchButton;
+
+    @Bind(R.id.search_input)
+    EditText mSearchInput;
+    @Bind(R.id.search_button)
+    Button mSearchButton;
+    @Bind(R.id.recyclerView)
+    RecyclerView mRecyclerView;
     private Cursor mCursor;
     private int LOAD_QUESTIONS = 1;
 
@@ -80,9 +85,7 @@ public class QuestionListFragment extends Fragment implements LoaderManager.Load
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_question_list, container, false);
-        initSearchView(v);
-
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+        ButterKnife.bind(this, v);
         mQuestionsAdapter = new QuestionsAdapter(QuestionListFragment.this);
         getLoaderManager().initLoader(LOAD_QUESTIONS, null, this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -128,12 +131,6 @@ public class QuestionListFragment extends Fragment implements LoaderManager.Load
 
         return builder.build().toString();
 
-    }
-
-    private void initSearchView(View v) {
-        mSearchInput = (EditText) v.findViewById(R.id.search_input);
-        mSearchButton = (Button) v.findViewById(R.id.search_button);
-        mSearchButton.setOnClickListener(this);
     }
 
 
@@ -189,18 +186,20 @@ public class QuestionListFragment extends Fragment implements LoaderManager.Load
         requestQueue.add(g);
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-
-            case R.id.search_button:
-                searchInput = mSearchInput.getText().toString();
-                if (searchInput.isEmpty()) {
-                    Toast.makeText(getActivity(), "Enter some text", Toast.LENGTH_SHORT).show();
-                } else {
-                    searchDataAndUpdateDB(searchInput);
-                }
-                break;
+    @OnClick(R.id.search_button)
+    public void search() {
+        searchInput = mSearchInput.getText().toString();
+        if (searchInput.isEmpty()) {
+            Toast.makeText(getActivity(), "Enter some text", Toast.LENGTH_SHORT).show();
+        } else {
+            searchDataAndUpdateDB(searchInput);
         }
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 }

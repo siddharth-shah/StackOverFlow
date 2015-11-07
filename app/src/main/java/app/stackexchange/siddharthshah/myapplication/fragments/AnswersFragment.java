@@ -35,6 +35,8 @@ import app.stackexchange.siddharthshah.myapplication.database.QuestionAnswerCont
 import app.stackexchange.siddharthshah.myapplication.http.Constants;
 import app.stackexchange.siddharthshah.myapplication.model.Answer;
 import app.stackexchange.siddharthshah.myapplication.model.AnswerList;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by siddharthshah on 27/09/15.
@@ -55,12 +57,13 @@ public class AnswersFragment extends Fragment implements LoaderManager.LoaderCal
     String questionTitleText;
     String questionOwner;
     String questionVotes;
-    private RecyclerView mRecyclerView;
+
+    @Bind(R.id.recyclerView)RecyclerView mRecyclerView;
+    @Bind(R.id.owner_name)TextView ownerName;
+    @Bind(R.id.question_title) TextView questionTitle;
+    @Bind(R.id.question_body) TextView questionBody;
     private AnswersAdapter mAnswersAdapter;
     private CursorLoader mCursorLoader;
-    private TextView ownerName;
-    private TextView questionTitle;
-    private TextView questionBody;
     private int LOAD_ANSWERS = 1;
     private int page = 1;
     private int pageSize = 10;
@@ -85,8 +88,8 @@ public class AnswersFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_answer_list, container, false);
-        initQuestionInfo(v);
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+        ButterKnife.bind(this,v);
+        initQuestionInfo();
         mAnswersAdapter = new AnswersAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAnswersAdapter);
@@ -117,10 +120,7 @@ public class AnswersFragment extends Fragment implements LoaderManager.LoaderCal
 
     }
 
-    public void initQuestionInfo(View v) {
-        ownerName = (TextView) v.findViewById(R.id.owner_name);
-        questionBody = (TextView) v.findViewById(R.id.question_body);
-        questionTitle = (TextView) v.findViewById(R.id.question_title);
+    public void initQuestionInfo() {
         ownerName.setText(questionOwner);
         questionBody.setText(Html.fromHtml(questionBodyText, null, new CodeTagHandler()));
         questionTitle.setText(questionTitleText);
@@ -200,5 +200,9 @@ public class AnswersFragment extends Fragment implements LoaderManager.LoaderCal
         requestQueue.add(g);
     }
 
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
 }

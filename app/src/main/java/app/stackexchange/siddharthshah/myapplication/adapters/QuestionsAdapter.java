@@ -11,6 +11,8 @@ import app.stackexchange.siddharthshah.myapplication.R;
 import app.stackexchange.siddharthshah.myapplication.activities.MainActivity;
 import app.stackexchange.siddharthshah.myapplication.fragments.QuestionListFragment;
 import app.stackexchange.siddharthshah.myapplication.model.QuestionInfo;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by siddharthshah on 27/09/15.
@@ -43,9 +45,9 @@ public class QuestionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         if (mCursor != null) {
             mCursor.moveToPosition(i);
-            ((ItemViewHolder) viewHolder).getName().setText(mCursor.getString(COL_OWNER_NAME));
-            ((ItemViewHolder) viewHolder).getQuestionTitle().setText(mCursor.getString(COL_QUESTION_TITLE));
-            ((ItemViewHolder) viewHolder).getTotalUpvotes().setText(mCursor.getString(COL_TOTAL_VOTES));
+            ((ItemViewHolder) viewHolder).name.setText(mCursor.getString(COL_OWNER_NAME));
+            ((ItemViewHolder) viewHolder).questionTitle.setText(mCursor.getString(COL_QUESTION_TITLE));
+            ((ItemViewHolder) viewHolder).totalUpvotes.setText(mCursor.getString(COL_TOTAL_VOTES));
             ((ItemViewHolder) viewHolder).setQuestionBody(mCursor.getString(COL_QUESTION_BODY));
             ((ItemViewHolder) viewHolder).setQuestionId(mCursor.getString(COL_QUESTION_ID));
         }
@@ -62,9 +64,12 @@ public class QuestionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView name;
-        private TextView questionTitle;
-        private TextView totalUpvotes;
+        @Bind(R.id.owner_name)
+        TextView name;
+        @Bind(R.id.question_title)
+        TextView questionTitle;
+        @Bind(R.id.total_votes)
+        TextView totalUpvotes;
         String questionBody;
         String questionId;
 
@@ -86,33 +91,20 @@ public class QuestionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         public ItemViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
-            name = (TextView) itemView.findViewById(R.id.owner_name);
-            questionTitle = (TextView) itemView.findViewById(R.id.question_title);
-            totalUpvotes = (TextView) itemView.findViewById(R.id.total_votes);
-        }
-
-        public TextView getName() {
-            return name;
-        }
-
-        public TextView getQuestionTitle() {
-            return questionTitle;
-        }
-
-        public TextView getTotalUpvotes() {
-            return totalUpvotes;
         }
 
         @Override
         public void onClick(View view) {
+
             QuestionInfo questionInfoToPass = new QuestionInfo();
 
-            String ownerName = getName().getText().toString();
-            String questionTitle = getQuestionTitle().getText().toString();
+            String ownerName = name.getText().toString();
+            String questionTitle = this.questionTitle.getText().toString();
             String questionBody = getQuestionBody();
             String questionId = getQuestionId();
-            String totalVotes = getTotalUpvotes().getText().toString();
+            String totalVotes = totalUpvotes.getText().toString();
             questionInfoToPass.setOwnerName(ownerName);
             questionInfoToPass.setQuestionId(questionId);
             questionInfoToPass.setQuestionTitle(questionTitle);
@@ -122,7 +114,6 @@ public class QuestionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 ((MainActivity) questionListFragment.
                         getActivity()).switchFragment(questionInfoToPass);
             }
-
         }
     }
 

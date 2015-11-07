@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import app.stackexchange.siddharthshah.myapplication.CodeTagHandler;
 import app.stackexchange.siddharthshah.myapplication.R;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by siddharthshah on 27/09/15.
@@ -36,8 +38,8 @@ public class AnswersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         if (mCursor != null) {
             mCursor.moveToPosition(i);
-            ((ItemViewHolder) viewHolder).getOwnerName().setText(mCursor.getString(COL_ANSWER_OWNER));
-            ((ItemViewHolder) viewHolder).getAnswerBody().setText(Html.fromHtml(mCursor.getString(COL_ANSWER_BODY),null,new CodeTagHandler()));
+            ((ItemViewHolder) viewHolder).ownerName.setText(mCursor.getString(COL_ANSWER_OWNER));
+            ((ItemViewHolder) viewHolder).answerBody.setText(Html.fromHtml(mCursor.getString(COL_ANSWER_BODY),null,new CodeTagHandler()));
         }
 
     }
@@ -53,22 +55,13 @@ public class AnswersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
-        private TextView ownerName;
-        private TextView answerBody;
+        @Bind(R.id.owner_name) TextView ownerName;
+        @Bind(R.id.answer_body) TextView answerBody;
 
         //        private TextView answerVotes;
         public ItemViewHolder(View itemView) {
             super(itemView);
-            ownerName = (TextView) itemView.findViewById(R.id.owner_name);
-            answerBody = (TextView) itemView.findViewById(R.id.answer_body);
-        }
-
-        public TextView getOwnerName() {
-            return ownerName;
-        }
-
-        public TextView getAnswerBody() {
-            return answerBody;
+            ButterKnife.bind(itemView);
         }
     }
 

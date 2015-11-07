@@ -10,10 +10,12 @@ import app.stackexchange.siddharthshah.myapplication.R;
 import app.stackexchange.siddharthshah.myapplication.fragments.AnswersFragment;
 import app.stackexchange.siddharthshah.myapplication.fragments.QuestionListFragment;
 import app.stackexchange.siddharthshah.myapplication.model.QuestionInfo;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
-    Toolbar mToolbar;
+    @Bind(R.id.toolbar)Toolbar mToolbar;
     private AnswersFragment mAnswersFragment;
     private QuestionListFragment mQuestionListFragment;
 
@@ -21,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mQuestionListFragment = QuestionListFragment.newInstance();
