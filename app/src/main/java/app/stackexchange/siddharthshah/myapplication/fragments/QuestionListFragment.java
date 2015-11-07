@@ -30,8 +30,9 @@ import app.stackexchange.siddharthshah.myapplication.R;
 import app.stackexchange.siddharthshah.myapplication.StackexchangeApplication;
 import app.stackexchange.siddharthshah.myapplication.adapters.QuestionsAdapter;
 import app.stackexchange.siddharthshah.myapplication.database.QuestionAnswerContract;
-import app.stackexchange.siddharthshah.myapplication.http.Constants;
 import app.stackexchange.siddharthshah.myapplication.http.GsonRequest;
+import app.stackexchange.siddharthshah.myapplication.http.UrlBuilderHelper;
+import app.stackexchange.siddharthshah.myapplication.model.ApiExtraParams;
 import app.stackexchange.siddharthshah.myapplication.model.Question;
 import app.stackexchange.siddharthshah.myapplication.model.QuestionList;
 import butterknife.Bind;
@@ -57,8 +58,8 @@ public class QuestionListFragment extends Fragment implements LoaderManager.Load
     private QuestionsAdapter mQuestionsAdapter;
     private CursorLoader mCursorLoader;
     private Integer questionId;
-    private int page = 1;
-    private int pageSize = 20;
+    private String page = "1";
+    private String pageSize = "20";
 
     @Bind(R.id.search_input)
     EditText mSearchInput;
@@ -114,29 +115,10 @@ public class QuestionListFragment extends Fragment implements LoaderManager.Load
     }
 
 
-    public String buildUrl() {
-
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme("https")
-                .authority("api.stackexchange.com")
-                .appendPath("2.2")
-                .appendPath("search")
-                .appendQueryParameter(Constants.PAGE, "" + page)
-                .appendQueryParameter(Constants.PAGE_SIZE, "" + pageSize)
-                .appendQueryParameter(Constants.ORDER, order)
-                .appendQueryParameter(Constants.SORT_CRITERIA, sortCriteria)
-                .appendQueryParameter(Constants.SEARCH_INPUT, searchInput)
-                .appendQueryParameter(Constants.SITE_TO_SEARCH, siteToSearch)
-                .appendQueryParameter(Constants.FILTER_CHOSEN, filter);
-
-        return builder.build().toString();
-
-    }
-
-
     private void searchDataAndUpdateDB(final String searchInput) {
         this.searchInput = searchInput;
-        String myUrl = buildUrl();
+        String myUrl = UrlBuilderHelper.buildUrlSearchQuestions(searchInput, new
+                ApiExtraParams(page, pageSize, sortCriteria, filter, order, siteToSearch));
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setTitle("Fetching Questions...");
         progressDialog.show();
@@ -202,4 +184,6 @@ public class QuestionListFragment extends Fragment implements LoaderManager.Load
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
+
+
 }

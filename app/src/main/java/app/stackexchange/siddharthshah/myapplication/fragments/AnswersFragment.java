@@ -29,14 +29,15 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 
 import app.stackexchange.siddharthshah.myapplication.CodeTagHandler;
-import app.stackexchange.siddharthshah.myapplication.http.GsonRequest;
 import app.stackexchange.siddharthshah.myapplication.R;
 import app.stackexchange.siddharthshah.myapplication.StackexchangeApplication;
 import app.stackexchange.siddharthshah.myapplication.adapters.AnswersAdapter;
 import app.stackexchange.siddharthshah.myapplication.database.QuestionAnswerContract;
-import app.stackexchange.siddharthshah.myapplication.http.Constants;
+import app.stackexchange.siddharthshah.myapplication.http.GsonRequest;
+import app.stackexchange.siddharthshah.myapplication.http.UrlBuilderHelper;
 import app.stackexchange.siddharthshah.myapplication.model.Answer;
 import app.stackexchange.siddharthshah.myapplication.model.AnswerList;
+import app.stackexchange.siddharthshah.myapplication.model.ApiExtraParams;
 import app.stackexchange.siddharthshah.myapplication.model.QuestionInfo;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -61,15 +62,19 @@ public class AnswersFragment extends Fragment implements LoaderManager.LoaderCal
     String questionOwner;
     String questionVotes;
 
-    @Bind(R.id.recyclerView)RecyclerView mRecyclerView;
-    @Bind(R.id.owner_name)TextView ownerName;
-    @Bind(R.id.question_title) TextView questionTitle;
-    @Bind(R.id.question_body) TextView questionBody;
+    @Bind(R.id.recyclerView)
+    RecyclerView mRecyclerView;
+    @Bind(R.id.owner_name)
+    TextView ownerName;
+    @Bind(R.id.question_title)
+    TextView questionTitle;
+    @Bind(R.id.question_body)
+    TextView questionBody;
     private AnswersAdapter mAnswersAdapter;
     private CursorLoader mCursorLoader;
     private int LOAD_ANSWERS = 1;
-    private int page = 1;
-    private int pageSize = 10;
+    private String page = "1";
+    private String pageSize = "10";
     private String questionId;
     private Cursor mCursor;
 
@@ -79,7 +84,7 @@ public class AnswersFragment extends Fragment implements LoaderManager.LoaderCal
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            Parcelable questionInfoParcelable = (Parcelable)bundle.getParcelable("questionInfo");
+            Parcelable questionInfoParcelable = (Parcelable) bundle.getParcelable("questionInfo");
             QuestionInfo questionInfo = (QuestionInfo) Parcels.unwrap(questionInfoParcelable);
 
             questionTitleText = questionInfo.getQuestionTitle();
@@ -94,7 +99,7 @@ public class AnswersFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_answer_list, container, false);
-        ButterKnife.bind(this,v);
+        ButterKnife.bind(this, v);
         initQuestionInfo();
         mAnswersAdapter = new AnswersAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -132,31 +137,14 @@ public class AnswersFragment extends Fragment implements LoaderManager.LoaderCal
         questionTitle.setText(questionTitleText);
     }
 
-    private String buildUrl(String questionId) {
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme("https")
-                .authority("api.stackexchange.com")
-                .appendPath("2.2")
-                .appendPath("questions")
-                .appendPath(questionId)
-                .appendPath("answers")
-                .appendQueryParameter(Constants.PAGE, "" + page)
-                .appendQueryParameter(Constants.PAGE_SIZE, "" + pageSize)
-                .appendQueryParameter(Constants.ORDER, order)
-                .appendQueryParameter(Constants.SORT_CRITERIA, sortCriteria)
-                .appendQueryParameter(Constants.SITE_TO_SEARCH, siteToSearch)
-                .appendQueryParameter(Constants.FILTER_CHOSEN, filter);
-
-        return builder.build().toString();
-
-    }
 
     private void fetchAnswersForQuestionId(String questionId) {
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setTitle("Fetching Answers...");
         progressDialog.show();
-
-        GsonRequest<AnswerList> g = new GsonRequest<AnswerList>(buildUrl(questionId),
+        String url = UrlBuilderHelper.buildUrlAnsToQuestionId(questionId,
+                new ApiExtraParams(page, pageSize, sortCriteria, filter, order, siteToSearch));
+        GsonRequest<AnswerList> g = new GsonRequest<AnswerList>(url,
                 AnswerList.class, null, new Response.Listener<AnswerList>() {
 
             @Override
