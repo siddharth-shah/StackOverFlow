@@ -78,6 +78,16 @@ public class QuestionListFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle b = getArguments();
+        if(b!=null){
+
+            String searchInput  = b.getString("searchInput");
+            if(searchInput!=null && !searchInput.isEmpty()){
+                this.searchInput = searchInput;
+            }
+
+        }
+
 
 
     }
@@ -88,9 +98,15 @@ public class QuestionListFragment extends Fragment implements LoaderManager.Load
         View v = inflater.inflate(R.layout.fragment_question_list, container, false);
         ButterKnife.bind(this, v);
         mQuestionsAdapter = new QuestionsAdapter(QuestionListFragment.this);
-        getLoaderManager().initLoader(LOAD_QUESTIONS, null, this);
+        if(searchInput!=null && !searchInput.isEmpty()){
+            mSearchInput.setText(searchInput);
+            search();
+        } else {
+            getLoaderManager().initLoader(LOAD_QUESTIONS, null, this);
+        }
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mQuestionsAdapter);
+
         return v;
 
     }

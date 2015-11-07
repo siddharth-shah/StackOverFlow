@@ -6,4 +6,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tagged_questions">/questions/tagged/</string>
+    <string name="stackoverflow_host">stackoverflow.com</string>
+    <string name="stackexchange_api_host">api.stackexchange.com</string>
+    <string name="search_api">/search/</string>
+    <string name="search_stackoverflow">/search</string>
 </resources>
