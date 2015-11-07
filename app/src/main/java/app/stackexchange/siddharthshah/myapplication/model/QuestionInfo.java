@@ -1,15 +1,29 @@
 package app.stackexchange.siddharthshah.myapplication.model;
 
+import org.parceler.Parcel;
+
 /**
  * Created by siddharthshah on 28/09/15.
  */
+@Parcel
 public class QuestionInfo {
 
-    public String ownerName;
-    public String questionId;
-    public String questionTitle;
-    public String questionBody;
-    public String totalVotes;
+    String ownerName;
+    String questionId;
+    String questionTitle;
+    String questionBody;
+    String totalVotes;
+
+    public QuestionInfo() {
+    }
+
+    public QuestionInfo(String ownerName, String questionId, String questionTitle, String questionBody, String totalVotes) {
+        this.ownerName = ownerName;
+        this.questionId = questionId;
+        this.questionTitle = questionTitle;
+        this.questionBody = questionBody;
+        this.totalVotes = totalVotes;
+    }
 
     public String getOwnerName() {
         return ownerName;

@@ -1,6 +1,7 @@
 package app.stackexchange.siddharthshah.myapplication.activities;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -58,13 +59,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void switchFragment(QuestionInfo questionInfo) {
+    public void switchFragment(Parcelable questionInfo) {
         Bundle bundle = new Bundle();
-        bundle.putString("questionId", questionInfo.getQuestionId());
-        bundle.putString("questionTitle", questionInfo.getQuestionTitle());
-        bundle.putString("questionBody", questionInfo.getQuestionBody());
-        bundle.putString("questionVotes", questionInfo.getTotalVotes());
-        bundle.putString("questionOwnerName", questionInfo.getOwnerName());
+        bundle.putParcelable("questionInfo",questionInfo);
         mAnswersFragment = new AnswersFragment();
         mAnswersFragment.setArguments(bundle);
         getFragmentManager().beginTransaction().replace(R.id.fragmentlayout, mAnswersFragment).commit();

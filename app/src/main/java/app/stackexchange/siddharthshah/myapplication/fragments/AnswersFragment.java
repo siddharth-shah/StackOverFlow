@@ -9,6 +9,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -24,6 +25,7 @@ import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 
+import org.parceler.Parcels;
 import java.util.ArrayList;
 
 import app.stackexchange.siddharthshah.myapplication.CodeTagHandler;
@@ -35,6 +37,7 @@ import app.stackexchange.siddharthshah.myapplication.database.QuestionAnswerCont
 import app.stackexchange.siddharthshah.myapplication.http.Constants;
 import app.stackexchange.siddharthshah.myapplication.model.Answer;
 import app.stackexchange.siddharthshah.myapplication.model.AnswerList;
+import app.stackexchange.siddharthshah.myapplication.model.QuestionInfo;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -76,11 +79,14 @@ public class AnswersFragment extends Fragment implements LoaderManager.LoaderCal
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            questionTitleText = bundle.getString("questionTitle", "");
-            questionBodyText = bundle.getString("questionBody", "");
-            questionVotes = bundle.getString("questionVotes", "");
-            questionOwner = bundle.getString("questionOwnerName", "");
-            questionId = bundle.getString("questionId", "");
+            Parcelable questionInfoParcelable = (Parcelable)bundle.getParcelable("questionInfo");
+            QuestionInfo questionInfo = (QuestionInfo) Parcels.unwrap(questionInfoParcelable);
+
+            questionTitleText = questionInfo.getQuestionTitle();
+            questionBodyText = questionInfo.getQuestionBody();
+            questionVotes = questionInfo.getTotalVotes();
+            questionOwner = questionInfo.getOwnerName();
+            questionId = questionInfo.getQuestionId();
             fetchAnswersForQuestionId(questionId);
         }
     }

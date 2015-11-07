@@ -1,11 +1,14 @@
 package app.stackexchange.siddharthshah.myapplication.adapters;
 
 import android.database.Cursor;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import org.parceler.Parcels;
 
 import app.stackexchange.siddharthshah.myapplication.R;
 import app.stackexchange.siddharthshah.myapplication.activities.MainActivity;
@@ -97,22 +100,18 @@ public class QuestionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @Override
         public void onClick(View view) {
-
-            QuestionInfo questionInfoToPass = new QuestionInfo();
-
             String ownerName = name.getText().toString();
             String questionTitle = this.questionTitle.getText().toString();
             String questionBody = getQuestionBody();
             String questionId = getQuestionId();
             String totalVotes = totalUpvotes.getText().toString();
-            questionInfoToPass.setOwnerName(ownerName);
-            questionInfoToPass.setQuestionId(questionId);
-            questionInfoToPass.setQuestionTitle(questionTitle);
-            questionInfoToPass.setQuestionBody(questionBody);
-            questionInfoToPass.setTotalVotes(totalVotes);
+
+            QuestionInfo questionInfo =
+                    new QuestionInfo(ownerName,questionId,questionTitle,questionBody,totalVotes);
+            Parcelable questionParcelable = Parcels.wrap(questionInfo);
             if (questionListFragment != null) {
                 ((MainActivity) questionListFragment.
-                        getActivity()).switchFragment(questionInfoToPass);
+                        getActivity()).switchFragment(questionParcelable);
             }
         }
     }
