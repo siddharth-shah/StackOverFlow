@@ -61,7 +61,7 @@ public class AnswersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         //        private TextView answerVotes;
         public ItemViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(itemView);
+            ButterKnife.bind(this,itemView);
         }
     }
 
